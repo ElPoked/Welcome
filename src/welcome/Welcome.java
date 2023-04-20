@@ -2,6 +2,9 @@ package welcome;
 
 public class Welcome {
 	public static String welcome(String nom) {
+		if (nom == null || (nom.trim()).equals("")) {
+			return "Hello, my friend";
+		}
 		String nomMaj = firstLetterUppercase(nom);
 		StringBuilder chaine = new StringBuilder("Hello, ");
 		chaine.append(nomMaj);

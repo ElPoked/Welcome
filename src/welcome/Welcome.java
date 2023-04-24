@@ -6,13 +6,13 @@ public class Welcome {
 			return "Hello, my friend";
 		} else if ((nom.toUpperCase()).equals(nom)) {
 			return welcomeShoutBuilder(nom);
-		} else if (twoFriends(nom)) {
-			return welcomeTwoFriendsBuilder(nom);
+		} else if (Friends(nom)) {
+			return welcomeFriendsBuilder(nom);
 		}
 		return welcomeBuilder(nom);
 	}
 
-	public static boolean twoFriends(String nom) {
+	public static boolean Friends(String nom) {
 		for (int i = 0; i < nom.length(); i++) {
 			if (nom.charAt(i) == ',') {
 				return true;
@@ -21,19 +21,46 @@ public class Welcome {
 		return false;
 	}
 
-	public static String welcomeTwoFriendsBuilder(String nom) {
-		int i = 0;
-		System.out.println(nom);
-		while (nom.charAt(i) != ',') {
-			i++;
+	public static int numberFriends(String nom) {
+		int nbFriends = 1;
+		for (int i = 0; i < nom.length(); i++) {
+			if (nom.charAt(i) == ',') {
+				nbFriends++;
+			}
 		}
-		String nom1 = nom.substring(0, i);
-		String nom2 = nom.substring(i + 1);
+		return nbFriends;
+	}
+
+	public static String[] friendsNames(String nom) {
+		String[] names = new String[numberFriends(nom)];
+		int endLastName = 0;
+		int j = 0;
+		for (int i = 0; i < nom.length(); i++) {
+			if (nom.charAt(i) == ',') {
+				if (nom.charAt(i + 1) == ' ') {
+					names[j] = nom.substring(endLastName, i);
+					j++;
+					endLastName = i + 2;
+				} else {
+					names[j] = nom.substring(endLastName, i);
+					j++;
+					endLastName = i + 1;
+				}
+
+			}
+		}
+		names[j] = nom.substring(endLastName, nom.length());
+		return names;
+	}
+
+	public static String welcomeFriendsBuilder(String nom) {
+		String[] names = friendsNames(nom);
 		StringBuilder chaine = new StringBuilder("Hello, ");
-		chaine.append(firstLetterUppercase(nom1));
-		chaine.append(", ");
-		chaine.append(firstLetterUppercase(nom2));
-		System.out.println(chaine.toString());
+		for (int i = 0; i < names.length - 1; i++) {
+			chaine.append(firstLetterUppercase(names[i]));
+			chaine.append(", ");
+		}
+		chaine.append(firstLetterUppercase(names[names.length - 1]));
 		return chaine.toString();
 
 	}

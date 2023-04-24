@@ -12,19 +12,28 @@ class WelcomeTest {
 	}
 
 	@Test
-	void hello_bob() {
+	void helloBob() {
 		assertEquals(Welcome.welcome("bob"), "Hello, Bob");
 		assertEquals(Welcome.welcome("Bob"), "Hello, Bob");
 	}
 
 	@Test
-	void hello_friend() {
+	void helloFriend() {
 		assertEquals(Welcome.welcome(null), "Hello, my friend");
 		assertEquals(Welcome.welcome("    "), "Hello, my friend");
 	}
 
 	@Test
-	void HELLO_FULLCAPS() {
+	void HELLOFULLCAPS() {
 		assertEquals(Welcome.welcome("JERRY"), "HELLO, JERRY !");
+		assertEquals(Welcome.welcome("BOB"), "HELLO, BOB !");
 	}
+
+	@Test
+	void helloTwoFriends() {
+		assertEquals(Welcome.welcome("Bob,Jerry"), "Hello, Bob, Jerry");
+		assertEquals(Welcome.welcome("Jerry,Bob"), "Hello, Jerry, Bob");
+		assertEquals(Welcome.welcome("bob,jerry"), "Hello, Bob, Jerry");
+	}
+
 }

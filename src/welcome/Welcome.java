@@ -2,14 +2,22 @@ package welcome;
 
 public class Welcome {
 	public static String welcome(String nom) {
-		if (nom == null || (nom.trim()).equals("")) {
+		if (nom == null || (nom.trim().equals(""))) {
 			return "Hello, my friend";
-		} else if ((nom.toUpperCase()).equals(nom)) {
-			return welcomeShoutBuilder(nom);
-		} else if (Friends(nom)) {
-			return welcomeFriendsBuilder(nom);
 		}
-		return welcomeBuilder(nom);
+		String name = byeByeSpaces(nom);
+		if ((name.toUpperCase()).equals(name)) {
+			return welcomeShoutBuilder(name);
+		} else if (Friends(name)) {
+			return welcomeFriendsBuilder(name);
+		}
+		return welcomeBuilder(name);
+	}
+
+	public static String byeByeSpaces(String nom) {
+		String noSpaceNom = nom.replaceAll(" ", "");
+		System.out.println(noSpaceNom);
+		return noSpaceNom;
 	}
 
 	public static boolean Friends(String nom) {

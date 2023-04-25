@@ -95,7 +95,12 @@ public class Welcome {
 		StringBuilder chaine = new StringBuilder("Hello, ");
 		for (int i = 0; i < noFullCapsNames.length - 1; i++) {
 			chaine.append(firstLetterUppercase(noFullCapsNames[i]));
-			chaine.append(", ");
+			if (i < noFullCapsNames.length - 2) {
+				chaine.append(", ");
+			}
+		}
+		if (noFullCapsNames.length > 1) {
+			chaine.append(" and ");
 		}
 		chaine.append(firstLetterUppercase(noFullCapsNames[noFullCapsNames.length - 1]));
 		if (nbFriendsFullCap > 0) {
@@ -108,7 +113,12 @@ public class Welcome {
 		StringBuilder chaine = new StringBuilder(". AND HELLO, ");
 		for (int i = 0; i < nbFriendsFullCapsNames(nom) - 1; i++) {
 			chaine.append(friendsFullCapsNames(nom)[i]);
-			chaine.append(", ");
+			if (i < nbFriendsFullCapsNames(nom) - 2) {
+				chaine.append(", ");
+			}
+		}
+		if (nbFriendsFullCapsNames(nom) > 1) {
+			chaine.append(" AND ");
 		}
 		chaine.append(friendsFullCapsNames(nom)[nbFriendsFullCapsNames(nom) - 1]);
 		chaine.append(" !");

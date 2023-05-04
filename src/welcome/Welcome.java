@@ -6,28 +6,14 @@ public class Welcome {
 			return "Hello, my friend";
 		}
 		String name = byeByeSpaces(nom);
-		if ((name.toUpperCase()).equals(name)) {
-			return welcomeShoutBuilder(name);
-		} else if (friends(name)) {
-			return welcomeFriendsBuilder(name);
-		}
-		return welcomeBuilder(name);
+		return welcomeFriends(name);
 	}
 
-	public static String byeByeSpaces(String nom) {
+	private static String byeByeSpaces(String nom) {
 		return nom.replace(" ", "");
 	}
 
-	public static boolean friends(String nom) {
-		for (int i = 0; i < nom.length(); i++) {
-			if (nom.charAt(i) == ',') {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static int numberFriends(String nom) {
+	private static int numberFriends(String nom) {
 		int nbFriends = 1;
 		for (int i = 0; i < nom.length(); i++) {
 			if (nom.charAt(i) == ',') {
@@ -37,7 +23,7 @@ public class Welcome {
 		return nbFriends;
 	}
 
-	public static String[] friendsNames(String nom) {
+	private static String[] friendsNames(String nom) {
 		String[] names = new String[numberFriends(nom)];
 		int endLastName = 0;
 		int j = 0;
@@ -52,7 +38,7 @@ public class Welcome {
 		return names;
 	}
 
-	public static int nbFriendsFullCapsNames(String nom) {
+	private static int nbFriendsFullCapsNames(String nom) {
 		String[] names = friendsNames(nom);
 		int nbFullCapsNames = 0;
 		for (int i = 0; i < names.length; i++) {
@@ -63,7 +49,7 @@ public class Welcome {
 		return nbFullCapsNames;
 	}
 
-	public static String[] friendsFullCapsNames(String nom) {
+	private static String[] friendsFullCapsNames(String nom) {
 		String[] names = friendsNames(nom);
 		String[] fullCapsNames = new String[nbFriendsFullCapsNames(nom)];
 		int j = 0;
@@ -76,7 +62,7 @@ public class Welcome {
 		return fullCapsNames;
 	}
 
-	public static String[] friendsNoFullCapsNames(String nom) {
+	private static String[] friendsNoFullCapsNames(String nom) {
 		String[] names = friendsNames(nom);
 		String[] noFullCapsNames = new String[numberFriends(nom) - nbFriendsFullCapsNames(nom)];
 		int j = 0;
@@ -92,21 +78,17 @@ public class Welcome {
 	private static String[] distinctNames(String[] names) {
 		String[] sort_names = new String[names.length];
 		int size_sort_names = 0;
-
 		for (int i = 0; i < names.length; i++) {
 			if (!in_list(sort_names, size_sort_names, names[i])) {
 				sort_names[size_sort_names] = firstLetterUppercase(names[i]);
 				size_sort_names++;
 			}
 		}
-
 		String[] final_list = new String[size_sort_names];
 		for (int i = 0; i < size_sort_names; i++) {
 			final_list[i] = sort_names[i];
 		}
-
 		return final_list;
-
 	}
 
 	private static boolean in_list(String[] list, int size, String name) {
@@ -124,7 +106,7 @@ public class Welcome {
 		return false;
 	}
 
-	public static int[] numFriendsNames(String[] names, String[] distinctNames) {
+	private static int[] numFriendsNames(String[] names, String[] distinctNames) {
 		int[] numNames = new int[distinctNames.length];
 		for (int i = 0; i < numNames.length; i++) {
 			numNames[i] = 0;
@@ -139,90 +121,77 @@ public class Welcome {
 		return numNames;
 	}
 
-	public static String welcomeFriendsBuilder(String nom) {
+	private static String welcomeFriends(String nom) {
 		String[] noFullCapsNames = distinctNames(friendsNoFullCapsNames(nom));
 		int[] numNoFullCapsNames = numFriendsNames(friendsNoFullCapsNames(nom), noFullCapsNames);
 		String[] fullCapsNames = distinctNames(friendsFullCapsNames(nom));
 		int[] numFullCapsNames = numFriendsNames(friendsFullCapsNames(nom), fullCapsNames);
-		StringBuilder chaine = new StringBuilder(welcomeNoFullCapsFriends(noFullCapsNames, numNoFullCapsNames));
+		StringBuilder chaine = new StringBuilder();
+		if (noFullCapsNames.length > 0) {
+			chaine.append(welcomeFriendsBuilder(noFullCapsNames, numNoFullCapsNames, false,
+					in_list(noFullCapsNames, noFullCapsNames.length, "Yoda")));
+		}
+
 		if (fullCapsNames.length > 0) {
-			chaine.append(welcomeShoutFriendsBuilder(fullCapsNames, numFullCapsNames));
+			if (nbFriendsFullCapsNames(nom) != numberFriends(nom)) {
+				chaine.append(". AND ");
+			}
+			chaine.append(welcomeFriendsBuilder(fullCapsNames, numFullCapsNames, true,
+					in_list(fullCapsNames, fullCapsNames.length, "YODA")));
 		}
 		return chaine.toString();
 	}
 
-	public static String welcomeNoFullCapsFriends(String[] names, int[] numNames) {
-		StringBuilder chaine = new StringBuilder("Hello, ");
-		for (int i = 0; i < names.length - 1; i++) {
-			chaine.append(names[i]);
-
-			if (numNames[i] > 1) {
-				chaine.append("(x");
-				chaine.append(numNames[i]);
-				chaine.append(")");
-			}
-			if (i < names.length - 2) {
-				chaine.append(", ");
-			}
-		}
-		if (names.length > 1) {
+	private static String welcomeFriendsBuilder(String[] names, int[] numNames, boolean upp, boolean yoda) {
+		StringBuilder chaine = new StringBuilder();
+		chaine.append(stringNames(names, numNames));
+		if (names.length > 1 && upp) {
+			chaine.append(" AND ");
+		} else if (names.length > 1) {
 			chaine.append(" and ");
 		}
 		chaine.append(names[names.length - 1]);
 		if (numNames[numNames.length - 1] > 1) {
-			chaine.append("(x");
-			chaine.append(numNames[numNames.length - 1]);
-			chaine.append(")");
+			chaine.append(numFriendsInParentesis(numNames[numNames.length - 1]));
+		}
+		if (yoda && upp) {
+			chaine.append(", HELLO !");
+		} else if (yoda) {
+			chaine.append(", Hello");
+		} else if (upp) {
+			chaine.insert(0, "HELLO, ");
+			chaine.append(" !");
+		} else {
+			chaine.insert(0, "Hello, ");
 		}
 		return chaine.toString();
 	}
 
-	public static String welcomeShoutFriendsBuilder(String[] names, int[] numNames) {
-		StringBuilder chaine = new StringBuilder(". AND HELLO, ");
+	private static String numFriendsInParentesis(int n) {
+		StringBuilder chaine = new StringBuilder("(x");
+		chaine.append(n);
+		chaine.append(")");
+		return chaine.toString();
+	}
+
+	private static String stringNames(String[] names, int[] numNames) {
+		StringBuilder chaine = new StringBuilder();
 		for (int i = 0; i < names.length - 1; i++) {
 			chaine.append(names[i]);
 			if (numNames[i] > 1) {
-				chaine.append("(x");
-				chaine.append(numNames[i]);
-				chaine.append(")");
+				chaine.append(numFriendsInParentesis(numNames[i]));
 			}
 			if (i < names.length - 2) {
 				chaine.append(", ");
 			}
 		}
-		if (names.length > 1) {
-			chaine.append(" AND ");
-		}
-		chaine.append(names[names.length - 1]);
-		if (numNames[numNames.length - 1] > 1) {
-			chaine.append("(x");
-			chaine.append(numNames[numNames.length - 1]);
-			chaine.append(")");
-		}
-		chaine.append(" !");
-
 		return chaine.toString();
 	}
 
-	public static String welcomeBuilder(String nom) {
-		StringBuilder chaine = new StringBuilder("Hello, ");
-		chaine.append(firstLetterUppercase(nom));
-		return chaine.toString();
-	}
-
-	public static String welcomeShoutBuilder(String nom) {
-		String nomFullCaps = nom.toUpperCase();
-		StringBuilder chaine = new StringBuilder("HELLO, ");
-		chaine.append(nomFullCaps);
-		chaine.append(" !");
-		return chaine.toString();
-	}
-
-	public static String firstLetterUppercase(String nom) {
+	private static String firstLetterUppercase(String nom) {
 		String premiereLettre = nom.substring(0, 1);
 		String resteNom = nom.substring(1);
 		String premiereLettreMaj = premiereLettre.toUpperCase();
 		return premiereLettreMaj.concat(resteNom);
 	}
-
 }
